@@ -9,7 +9,7 @@ Write a test project using:
 
 # Test must be able to do the next instruction:
 
-1 Let's SQUANCH!
+#1 Let's SQUANCH!
 
 You need to write a squanch.py script:
 
@@ -17,7 +17,7 @@ You need to write a squanch.py script:
 - Inside the folder creates a text file "<file creation date>_squanch.txt" with the text line "let's <randomly generated word from the letters of 'squanch'>"
 
 
-2 Rick and Morty Stand-Up Show
+#2 Rick and Morty Stand-Up Show
 
 You need to write ram_standup.py script:
 
@@ -31,7 +31,7 @@ You need to write ram_standup.py script:
 - After typing enter the window closes.
 
 
-3 This is The Base
+#3 This is The Base
 
 Required:
 
@@ -42,7 +42,7 @@ Required:
 Important, the data must not be duplicated, at each run the data must be updated and actualized in to the database.
 
 
-4 Percent Moments...
+#4 Percent Moments...
 
 You need to write the ram_top.py script with the parameters -value (int: 1 - 100) and -type (str: characters / episodes):
 
@@ -51,7 +51,7 @@ You need to write the ram_top.py script with the parameters -value (int: 1 - 100
 
 Important, the data must be taken from the database, filled in task 3.
 
-5 And Last but not Least
+#5 And Last but not Least
 
 Needed:
 

@@ -51,18 +51,6 @@ You need to write the ram_top.py script with the parameters -value (int: 1 - 100
 
 Important, the data must be taken from the database, filled in task 3.
 
-# 5 And Last but not Least
-
-Needed:
-
-- Create a private git repository.
-- Put the results of the work into it.
-- Provide access to the mail that will go with the task.
-
-It is important that the repository should not contain data for connecting to the database.
-It is necessary to specify in the README file, the option of correct launching, if needed.
-In case of errors with this task, the files can be dropped in an archive.
-
 
 # Copying the repository and installing dependencies:
 ```

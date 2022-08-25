@@ -1,90 +1,77 @@
 import psycopg2
-from configure import host, dbname, user, password
+import configure
+from configure import *
 
-host = host
-dbname = dbname
-user = user
-password = password
+def get_name_and_episodes(value):
 
-value = input('Pleas, input your value from 1 to 100: ')
-type = input('Pleas, input the type - "characters" or "episodes": ')
+    try:
+        # connect to exist database
+        connection = psycopg2.connect(
+            host=configure.host,
+            user=configure.user,
+            password=configure.password,
+            database=configure.dbname
+        )
+        connection.autocommit = True
 
-if 1 <= int(value) < 101 and type == 'characters' or type == 'episodes':
+        postgreSQL_select_Query = f'SELECT name, num_of_episods FROM characters WHERE num_of_episods BETWEEN {value} AND 100 ORDER BY num_of_episods DESC LIMIT 10'
+
+        with connection.cursor() as cursor:
+
+            cursor.execute(postgreSQL_select_Query)
+            character_records = cursor.fetchall()
+
+            for i in character_records:
+                print(f'Name: {i[0]}, Number of episodes: {i[1]}')
+
+    except Exception as _ex:
+        print('[INFO] Error while working with PostgreSQL', _ex)
+    finally:
+        if connection:
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+def get_name_of_episodes_by_char_id(value):
+
+    try:
+        # connect to exist database
+        connection = psycopg2.connect(
+            host=configure.host,
+            user=configure.user,
+            password=configure.password,
+            database=configure.dbname
+        )
+        connection.autocommit = True
+
+        postgreSQL_select_Query = f'SELECT name_of_episods FROM characters WHERE id = {value}'
+
+        with connection.cursor() as cursor:
+
+            cursor.execute(postgreSQL_select_Query)
+            episodes_records = cursor.fetchall()
+            list_of_epi_names = episodes_records[0][0].replace('{', '').replace('}', '').replace('"', '').split(',')
+
+            if len(list_of_epi_names) > 10:
+                for episode_name in list_of_epi_names[0:11]:
+                    print(episode_name.strip())
+            else:
+                for episode_name in list_of_epi_names:
+                    print(episode_name.strip())
+
+
+    except Exception as _ex:
+        print('[INFO] Error while working with PostgreSQL', _ex)
+    finally:
+        if connection:
+            connection.close()
+            print("[INFO] PostgreSQL connection closed")
+
+
+if __name__ == '__main__':
+    value = input('Pleas, input your value from 1 to 100: ')
+    type = input('Pleas, input the type - "characters" or "episodes": ')
+
     if type == 'characters':
-        # Construct connection string
-        try:
-            # connect to exist database
-            connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=dbname
-            )
-
-            connection.autocommit = True
-
-            postgreSQL_select_Query = """select * from characters where num_of_episods BETWEEN 5 and 100 ORDER BY num_of_episods DESC"""
-
-            with connection.cursor() as cursor:
-
-                cursor.execute(postgreSQL_select_Query)
-                character_records = cursor.fetchall()
-
-                if len(character_records) > 10:
-                    i = 0
-                    for row in character_records:
-                        if i == 10:
-                            break
-                        else:
-                            print(f'Name: {row[1]}, Number of episodes: {row[8]}')
-                            i += 1
-
-
-        except Exception as _ex:
-            print('[INFO] Error while working with PostgreSQL', _ex)
-        finally:
-            if connection:
-                connection.close()
-                print("[INFO] PostgreSQL connection closed")
-
-
-    if type == 'episodes':
-
-        try:
-            # connect to exist database
-            connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=dbname
-            )
-
-            connection.autocommit = True
-
-            postgreSQL_select_Query = f"""select * from characters where id = {value}"""
-
-            with connection.cursor() as cursor:
-
-                cursor.execute(postgreSQL_select_Query)
-
-                character_records = cursor.fetchall()
-                data_epi_names = character_records[0][9]
-                clear_data_epi_name = data_epi_names.replace('{', '').replace('}', '').replace('"', '').split(',')
-
-                if len(clear_data_epi_name) > 10:
-                    for episode_name in clear_data_epi_name[0:11]:
-                        print(episode_name.strip())
-                else:
-                    for episode_name in clear_data_epi_name:
-                        print(episode_name.strip())
-
-        except Exception as _ex:
-            print('[INFO] Error while working with PostgreSQL', _ex)
-        finally:
-            if connection:
-                connection.close()
-                print("[INFO] PostgreSQL connection closed")
-
-else:
-    print('Not correct data input')
-    print('Pleas try again')
+        get_name_and_episodes(value)
+    else:
+        get_name_of_episodes_by_char_id(value)

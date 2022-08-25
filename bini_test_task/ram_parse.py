@@ -1,15 +1,8 @@
-import config
-from config import host, dbname, user, password
+import configure
+from configure import *
 import ramapi
 import psycopg2
-from ramapi import Base
-from ramapi import Character
 import requests
-
-host = config.host
-dbname = config.dbname
-user = config.user
-password = config.password
 
 #Get_The_Number_Of_Pages
 Char_num_pages = ramapi.Character.get_page(1)['info']['pages']  # 42
@@ -17,9 +10,45 @@ Loc_num_pages = ramapi.Location.get_all()['info']['pages']  # 7
 Epi_num_pages = ramapi.Episode.get_all()['info']['pages']  # 3
 
 #Data_previos
-CHARACTERS = 826
-LOCATIONS = 126
-EPISODES = 51
+try:
+    # Connect_To_Exist_Database
+    connection = psycopg2.connect(
+        host=configure.host,
+        user=configure.user,
+        password=configure.password,
+        database=configure.dbname
+    )
+
+    connection.autocommit = True
+
+    with connection.cursor() as cursor:
+        value_of_characters = cursor.execute(
+            """SELECT MAX(id) FROM characters WHERE id is not null"""
+        )
+        character_records = cursor.fetchone()
+
+        value_of_locations = cursor.execute(
+            """SELECT MAX(id) FROM location WHERE id is not null"""
+        )
+        location_records = cursor.fetchone()
+
+        value_of_episodes = cursor.execute(
+            """SELECT MAX(id) FROM episodes WHERE id is not null"""
+        )
+        episodes_records = cursor.fetchone()
+
+
+except Exception as _ex:
+    print('[INFO] Error while working with PostgreSQL', _ex)
+
+finally:
+    if connection:
+        connection.close()
+        print("[INFO] PostgreSQL connection closed")
+
+CHARACTERS = character_records[0]
+LOCATIONS = location_records[0]
+EPISODES = episodes_records[0]
 
 #Data_up_to_day
 CHAR = ramapi.Character.get_all()['info']['count']
@@ -40,10 +69,10 @@ else:
         try:
             #Connect_To_Exist_Database
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=dbname
+                host=configure.host,
+                user=configure.user,
+                password=configure.password,
+                database=configure.dbname
             )
 
             connection.autocommit = True
@@ -80,6 +109,12 @@ else:
                     )
                     print(f"Character Data successfully uploaded")
 
+                with connection.cursor() as cursor:
+                    value_of_characters = cursor.execute(
+                        """SELECT max(char_id) FROM characters"""
+                    )
+                    print(value_of_characters)
+
         except Exception as _ex:
             print('[INFO] Error while working with PostgreSQL', _ex)
 
@@ -95,10 +130,10 @@ else:
         try:
             #Connect_To_Exist_Database
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=dbname
+                host=configure.host,
+                user=configure.user,
+                password=configure.password,
+                database=configure.dbname
             )
 
             connection.autocommit = True
@@ -133,10 +168,10 @@ else:
         try:
             #Connect_To_Exist_Database
             connection = psycopg2.connect(
-                host=host,
-                user=user,
-                password=password,
-                database=dbname
+                host=configure.host,
+                user=configure.user,
+                password=configure.password,
+                database=configure.dbname
             )
 
             connection.autocommit = True

@@ -1,24 +1,16 @@
 import os
+import shutil
 from datetime import date
 from random import choice
 
-current_date = date.today()
-name_of_txtfile = f'{current_date}_squanch.txt'
-path = os.getcwd()
-directory = list(os.walk(path))
 folder_name = 'squanch'
+if os.path.exists(f'{os.getcwd()}/{folder_name}/{date.today()}_{folder_name}.txt'):
+    shutil.rmtree(f'{os.getcwd()}/{folder_name}')
 
-for dirs, folders, files in directory:
-    if folder_name not in folders:
-        os.mkdir(folder_name)
-    else:
-        print('folder "squanch" already exists')
-    path = os.path.join(dirs, folder_name)
-    break
+os.mkdir(f'{os.getcwd()}/{folder_name}')
+os.chdir(f'{os.getcwd()}/{folder_name}')
 
-os.chdir(path)
-
-with open(f'{name_of_txtfile}', 'w') as file:
+with open(f'{date.today()}_{folder_name}.txt', 'w') as file:
     word = ''
     for char in folder_name:
         random_char = choice(folder_name)

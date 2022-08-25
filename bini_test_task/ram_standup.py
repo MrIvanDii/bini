@@ -1,9 +1,7 @@
-import sys
-import random
+from sys import exit
 from random import choice
 import ramapi
-from ramapi import Base
-from ramapi import Character
+import random
 import json
 from jokeapi import Jokes
 import asyncio
@@ -17,7 +15,7 @@ def decision():
 char_pgs = ramapi.Character.get_all()['info']['pages']
 
 #number of all characters
-num_all_char = 826
+num_all_char = ramapi.Character.get_all()['info']['count']
 
 # Get_Joke
 async def make_joke():
@@ -33,11 +31,15 @@ async def make_joke():
 rand_joke = asyncio.run(make_joke())
 
 # Get_The_Random_Characters
+required_number_of_guests = 7
 list_of_guests = []
-for one_of_seven_char in range(0, 7):
-    id_of_random_char = random.randint(1, num_all_char)
-    picked_chracter = ramapi.Character.get(id_of_random_char)['name']
-    list_of_guests.append(picked_chracter)
+while True:
+    if len(list_of_guests) == required_number_of_guests: break
+    else:
+        id_of_random_char = random.randint(1, num_all_char)
+        picked_chracter = ramapi.Character.get(id_of_random_char)['name']
+        if picked_chracter in list_of_guests: pass
+        list_of_guests.append(picked_chracter)
 
 #Host_of_the_show
 host_of_the_show = ramapi.Character.get(random.randint(1, num_all_char))['name']
@@ -56,7 +58,7 @@ for name in list_of_guests:
 time.sleep(2)
 print(f'\n{host_of_the_show}: - Are you excited?')
 time.sleep(2)
-print('\nWould you like to continue?')
+decision()
 decision_1 = input('press "Enter": _')
 
 #Guests_presentation_one_by_one
